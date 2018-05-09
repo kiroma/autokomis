@@ -1,6 +1,6 @@
 <?php
 try{
-    $sth = new PDO("mysql:host=127.0.0.1;charset=utf8", "root", "");
+    $sth = new PDO("mysql:host=127.0.0.1;charset=utf8", "autokomis", "strona");
     $sth -> setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
 }catch(PDOException $e)
 {
@@ -17,8 +17,8 @@ try{
     Kolor varchar(15) not null, 
     Rocznik varchar(5) not null, 
     Przebieg int(20) not null, 
-    Cena DECIMAL(10,2) not null, 
-    Zdjecia longblob) 
+    Cena DECIMAL(10,2) not null,
+    Zdjecie varchar(2083))
     CHARACTER SET utf8 COLLATE utf8_general_ci");
 }catch(PDOException $e)
 {
@@ -33,21 +33,13 @@ if(isset($_POST["submit"]))
     $rocznik = $_POST["rocznik"];
     $przebieg = $_POST["przebieg"];
     $cena = $_POST["cena"];
-    if(isset($_POST["zdjecie"]))
-        $zdjecie = $_POST["zdjecie"];
-}
-try{
-    if(isset($zdjecie))
-    {
-        $qry = $sth -> prepare("INSERT INTO Autka(marka, model, pojemnosc, kolor, rocznik, przebieg, cena, zdjecia) VALUES (?, ?, ?, ?, ?, ?, ?, ?)");
-        $qry -> execute(array($marka, $model, $pojemnosc, $kolor, $rocznik, $przebieg, $cena, $zdjecie));
-    }else{
+    try{
         $qry = $sth -> prepare("INSERT INTO Autka(marka, model, pojemnosc, kolor, rocznik, przebieg, cena) VALUES (?, ?, ?, ?, ?, ?, ?)");
         $qry -> execute(array($marka, $model, $pojemnosc, $kolor, $rocznik, $przebieg, $cena));
+    }catch(PDOException $e)
+    {
+        die("Inserting data failed, $e");
     }
-}catch(PDOException $e)
-{
-    die("Inserting data failed, $e");
 }
 echo ("Wystawiono!");
 ?>
