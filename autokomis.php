@@ -18,7 +18,7 @@ try{
     Rocznik varchar(5) not null, 
     Przebieg int(20) not null, 
     Cena DECIMAL(10,2) not null,
-    Zdjecie varchar(2083))
+    Zdjecie bool)
     CHARACTER SET utf8 COLLATE utf8_general_ci");
 }catch(PDOException $e)
 {
@@ -33,12 +33,29 @@ if(isset($_POST["submit"]))
     $rocznik = $_POST["rocznik"];
     $przebieg = $_POST["przebieg"];
     $cena = $_POST["cena"];
+    $zdjecie = false;
+    if(isset($_POST["zdjecie"]))
+    {
+	$check = getimagesize($_FILES["zdjecie"]["tmp_name"]);
+	if($check !== false)
+	{
+		die("Fatal error while uploading image");
+	}
+	$zdjecie = true;
+    }
     try{
-        $qry = $sth -> prepare("INSERT INTO Autka(marka, model, pojemnosc, kolor, rocznik, przebieg, cena) VALUES (?, ?, ?, ?, ?, ?, ?)");
-        $qry -> execute(array($marka, $model, $pojemnosc, $kolor, $rocznik, $przebieg, $cena));
+        $qry = $sth -> prepare("INSERT INTO Autka(marka, model, pojemnosc, kolor, rocznik, przebieg, cena, zdjecie) VALUES (?, ?, ?, ?, ?, ?, ?, ?)");
+        $qry -> execute(array($marka, $model, $pojemnosc, $kolor, $rocznik, $przebieg, $cena, $zdjecie));
     }catch(PDOException $e)
     {
         die("Inserting data failed, $e");
+    }
+    if(isset($_POST["zdjecie"]))
+    {
+	    $photoid = $sth -> query('SELECT ID FROM Autka ORDER BY ID DESC LIMIT 1') -> fetchAll()[0];
+	    $fileType = strtolower(pathinfo(basename($_FILES["zdjecie"][$photoid])), PATHINFO_EXTENSION);
+	    if (!move_uploaded_file($_FILES["zdjecie"]["tmp_name"], "$photoid.$fileType")
+		die("Something went wrong when uploading photo");
     }
 }
 echo ("Wystawiono!");

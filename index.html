@@ -8,7 +8,7 @@
 
 <body>
     <h1>Sprzedam samochód</h1>
-    <form action="autokomis.php" method="post">
+    <form action="autokomis.php" method="post" enctype="multipart/form-data">
         <input type="text" name="marka" placeholder="Marka"><br>
         <input type="text" name="model" placeholder="Model"><br>
         <input type="text" name="pojemnosc" placeholder="Pojemność"><br>
@@ -16,7 +16,7 @@
         <input type="number" name="rocznik" placeholder="Rocznik"><br>
         <input type="number" name="przebieg" placeholder="Przebieg"><br>
         <input type="number" name="cena" placeholder="Cena"><br>
-        <input type="file" name="zdjecie"><br>
+        <input type="file" name="zdjecie" id="zdjecie"><br>
         <button type="submit" name="submit">Wystaw</button>
     </form>
 </body>
