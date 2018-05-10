@@ -3,19 +3,20 @@
 
 <head>
     <meta charset="utf-8">
+    <link rel=stylesheet href=default.css>
     <title>Sprzedam samochód</title>
 </head>
 
 <body>
     <h1>Sprzedam samochód</h1>
     <form action="autokomis.php" method="post" enctype="multipart/form-data">
-        <input type="text" name="marka" placeholder="Marka"><br>
-        <input type="text" name="model" placeholder="Model"><br>
-        <input type="text" name="pojemnosc" placeholder="Pojemność"><br>
-        <input type="text" name="kolor" placeholder="Kolor"><br>
-        <input type="number" name="rocznik" placeholder="Rocznik"><br>
-        <input type="number" name="przebieg" placeholder="Przebieg"><br>
-        <input type="number" name="cena" placeholder="Cena"><br>
+        <input type="text" name="marka" placeholder="Marka" required><br>
+        <input type="text" name="model" placeholder="Model" required><br>
+        <input type="text" name="pojemnosc" placeholder="Pojemność" required><br>
+        <input type="text" name="kolor" placeholder="Kolor" required><br>
+        <input type="number" name="rocznik" placeholder="Rocznik" required><br>
+        <input type="number" name="przebieg" placeholder="Przebieg" required><br>
+        <input type="number" name="cena" placeholder="Cena" required><br>
         <input type="file" name="zdjecie"><br>
         <button type="submit" name="submit">Wystaw</button>
     </form>
