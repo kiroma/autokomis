@@ -54,19 +54,16 @@ if(isset($_POST["submit"]))
 		die("Inserting data failed, $e");
 	}
 	if($zdjecie == 1){
-		print("uploading file");
-		try{
-			$lastid = $dbh -> query("SELECT ID FROM Autka ORDER BY ID DESC LIMIT 1") -> fetchAll()[0];
-		}catch(PDOException $e){
-			die("what.<br> $e");
-		}
-		print_r($lastid . "<br>");
+		print("Uploading $_FILES[zdjecie][name]<br>");
+		$lastid = $dbh -> query("SELECT ID FROM Autka ORDER BY ID DESC LIMIT 1") -> fetchAll()[0];
 		$photoid = $lastid["ID"];
-		print_r($photoid);
-		if (move_uploaded_file($_FILES["zdjecie"]["tmp_name"],"uploads/".$photoid."/".$_FILES["zdjecie"]["name"])){
+		print("Photo ID = $photoid <br>");
+		$tmpname = $_FILES["zdjecie"]["tmp_name"];
+		$name = basename($_FILES["zdjecie"]["name"]);
+		if (move_uploaded_file($tmpname, "/uploads/$name")){
 			echo ("Image uploaded!");
 		}else{
-			print_r($_FILES);
+			print_r($tmpname." -> ".$name. "<br>");
 			$dbh -> query("DELETE FROM Autka WHERE ID=$photoid");
 			die("Something went wrong when uploading photo");
 		}
