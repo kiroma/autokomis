@@ -27,6 +27,12 @@ try{
 print("<h1>Database connection estabilished</h1>");
 if(isset($_POST["submit"]))
 {
+	try{
+		$dbh = new PDO("mysql:host=127.0.0.1;charset=utf8;dbname=Autokomis", "autokomis", "strona");
+	}catch(PDOException $e)
+	{
+		die("Error when re-estabilishing database connection, $e");
+	}
 	$marka = $_POST["marka"];
 	$model = $_POST["model"];
 	$pojemnosc = $_POST["pojemnosc"];
@@ -44,11 +50,11 @@ if(isset($_POST["submit"]))
 		}
 		else
 		{
-			die("Fatal error while uploading image");
+			die("Couldn't get image size");
 		}
 	}
 	try{
-		$qry = $sth -> prepare("INSERT INTO Autka(marka, model, pojemnosc, kolor, rocznik, przebieg, cena, zdjecie) VALUES (?, ?, ?, ?, ?, ?, ?, ?)");
+		$qry = $dbh -> prepare("INSERT INTO Autka(marka, model, pojemnosc, kolor, rocznik, przebieg, cena, zdjecie) VALUES (?, ?, ?, ?, ?, ?, ?, ?)");
 		$qry -> execute(array($marka, $model, $pojemnosc, $kolor, $rocznik, $przebieg, $cena, $_FILES["zdjecie"]["name"]));
 	}catch(PDOException $e)
 	{
@@ -58,7 +64,7 @@ if(isset($_POST["submit"]))
 	{
 		print("uploading file");
 		try{
-			$lastid = $sth -> query("SELECT ID FROM Autka ORDER BY ID DESC LIMIT 1");
+			$lastid = $dbh -> query("SELECT ID FROM Autka ORDER BY ID DESC LIMIT 1");
 		}catch(PDOException $e)
 		{
 			die("what.<br> $e");
@@ -72,7 +78,7 @@ if(isset($_POST["submit"]))
 		}else
 		{
 			print_r($_FILES);
-			$sth -> query("DELETE FROM Autka WHERE ID=$photoid");
+			$dbh -> query("DELETE FROM Autka WHERE ID=$photoid");
 			die("Something went wrong when uploading photo");
 		}
 	}
