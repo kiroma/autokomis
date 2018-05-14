@@ -2,8 +2,7 @@
 try{
 	$sth = new PDO("mysql:host=127.0.0.1;charset=utf8", "autokomis", "strona");
 	$sth -> setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
-}catch(PDOException $e)
-{
+}catch(PDOException $e){
 	die("Connection failed, $e");
 }
 try{
@@ -20,8 +19,7 @@ try{
 	Cena DECIMAL(10,2) not null,
 	Zdjecie varchar(255))
 	CHARACTER SET utf8 COLLATE utf8_general_ci");
-}catch(PDOException $e)
-{
+}catch(PDOException $e){
 	die("Creating database failed, $e");
 }
 print("<h1>Database connection estabilished</h1>");
@@ -29,8 +27,7 @@ if(isset($_POST["submit"]))
 {
 	try{
 		$dbh = new PDO("mysql:host=127.0.0.1;charset=utf8;dbname=Autokomis", "autokomis", "strona");
-	}catch(PDOException $e)
-	{
+	}catch(PDOException $e){
 		die("Error when re-estabilishing database connection, $e");
 	}
 	$marka = $_POST["marka"];
@@ -41,27 +38,22 @@ if(isset($_POST["submit"]))
 	$przebieg = $_POST["przebieg"];
 	$cena = $_POST["cena"];
 	$zdjecie = 0;
-	if(is_uploaded_file($_FILES["zdjecie"]["tmp_name"]))
-	{
+	if(is_uploaded_file($_FILES["zdjecie"]["tmp_name"])){
 		$check = getimagesize($_FILES["zdjecie"]["tmp_name"]);
-		if($check !== false)
-		{
+		if($check !== false){
 			$zdjecie = 1;
 		}
-		else
-		{
+		else{
 			die("Couldn't get image size");
 		}
 	}
 	try{
 		$qry = $dbh -> prepare("INSERT INTO Autka(marka, model, pojemnosc, kolor, rocznik, przebieg, cena, zdjecie) VALUES (?, ?, ?, ?, ?, ?, ?, ?)");
 		$qry -> execute(array($marka, $model, $pojemnosc, $kolor, $rocznik, $przebieg, $cena, $_FILES["zdjecie"]["name"]));
-	}catch(PDOException $e)
-	{
+	}catch(PDOException $e){
 		die("Inserting data failed, $e");
 	}
-	if($zdjecie == 1)
-	{
+	if($zdjecie == 1){
 		print("uploading file");
 		try{
 			$lastid = $dbh -> query("SELECT ID FROM Autka ORDER BY ID DESC LIMIT 1") -> fetchAll()[0];
@@ -71,11 +63,9 @@ if(isset($_POST["submit"]))
 		print_r($lastid . "<br>");
 		$photoid = $lastid["ID"];
 		print_r($photoid);
-		if (move_uploaded_file($_FILES["zdjecie"]["tmp_name"],"uploads/".$photoid."/".$_FILES["zdjecie"]["name"]))
-		{
+		if (move_uploaded_file($_FILES["zdjecie"]["tmp_name"],"uploads/".$photoid."/".$_FILES["zdjecie"]["name"])){
 			echo ("Image uploaded!");
-		}else
-		{
+		}else{
 			print_r($_FILES);
 			$dbh -> query("DELETE FROM Autka WHERE ID=$photoid");
 			die("Something went wrong when uploading photo");
