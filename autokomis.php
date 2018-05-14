@@ -64,9 +64,8 @@ if(isset($_POST["submit"]))
 	{
 		print("uploading file");
 		try{
-			$lastid = $dbh -> query("SELECT ID FROM Autka ORDER BY ID DESC LIMIT 1");
-		}catch(PDOException $e)
-		{
+			$lastid = $dbh -> query("SELECT ID FROM Autka ORDER BY ID DESC LIMIT 1") -> fetchAll()[0];
+		}catch(PDOException $e){
 			die("what.<br> $e");
 		}
 		print_r($lastid . "<br>");
